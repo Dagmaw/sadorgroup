@@ -25,9 +25,30 @@ import {
 
 import { useIdentity } from '@/lib/identity-context'
 
+// export const Route = createFileRoute('/login')({
+//   component: LoginPage,
+// })
+// src/routes/login.tsx
+
+import { createFileRoute } from '@tanstack/react-router'
+import { SignIn } from '@clerk/clerk-react'
+
 export const Route = createFileRoute('/login')({
-  component: LoginPage,
+  component: () => {
+    return (
+      <div className="flex items-center justify-center h-screen bg-neutral-950">
+        <SignIn
+          path="/login"
+          routing="path"
+          signUpUrl="/login"
+          afterSignInUrl="/"   // ✅ NEW: redirect to homepage after login
+          afterSignUpUrl="/"   // ✅ NEW: redirect to homepage after signup
+        />
+      </div>
+    )
+  },
 })
+
 
 type Mode = 'login' | 'signup' | 'forgot'
 type Status = 'idle' | 'pending'
