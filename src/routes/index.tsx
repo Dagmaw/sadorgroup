@@ -1014,6 +1014,32 @@ function Home() {
   )
 }
 
+// export const Route = createFileRoute('/')({
+//   component: Home,
+// })
+import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { useIdentity } from '@/lib/identity-context'
+import Home from './Home' // keep your existing Home component
+
 export const Route = createFileRoute('/')({
-  component: Home,
+  component: () => {
+    const { user, ready } = useIdentity()
+
+    if (!ready) {
+      return (
+        <div className="flex items-center justify-center h-screen text-neutral-400">
+          Loading...
+        </div>
+      )
+    }
+
+    if (!user) {
+      // 🚨 NEW: redirect unauthenticated users to /login
+      return <Navigate to="/login" />
+    }
+
+    // ✅ Only logged-in users see the corporate hub
+    return <Home />
+  },
 })
+
